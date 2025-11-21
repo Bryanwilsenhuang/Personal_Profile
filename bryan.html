@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Bryan Wilsen Huang</title>
+    
+    <style>
+       
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+      
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; 
+            min-height: 100vh;
+        }
+
+     
+        .profile-card {
+            background-color: #ffffff;
+            width: 90%;
+            max-width: 650px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 50px;
+        }
+
+      
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        .header p {
+            color: #777;
+            font-size: 1.1em;
+            margin-top: 5px;
+        }
+
+      
+        .main-content {
+            display: block; 
+        }
+
+        .section {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .section h3 {
+            color: #2E8B57; 
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+       
+        .info-list {
+            list-style-type: '🎮 '; 
+            padding-left: 20px;
+            margin-top: 15px;
+        }
+        
+          .info-lists {
+            list-style-type: '🎬 '; 
+            padding-left: 20px;
+            margin-top: 15px;
+        }
+
+        .about-list {
+             list-style-type: '⭐ '; 
+        }
+
+
+        .info-list li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+  
+        .nav-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: bold;
+            padding: 10px;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .nav-link:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+         .cursor-tail {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: rgba(33, 18, 141, 0.7);
+            pointer-events: none;
+            
+            transition: transform 0.5s ease-out, opacity 0.5s ease-out; 
+            z-index: 9999;
+        }
+
+
+
+       
+        @media (max-width: 768px) {
+            .profile-card {
+                padding: 20px;
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <audio id="bgMusic" loop>
+      <source src="c:\Users\user\Music\4K Cozy Coffee Shop ☕ Smooth Piano Jazz Music for Relaxing, Studying, Sleeping [jh4C7w-dvho].mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="profile-card">
+        
+        <div class="header">
+            <h1>Bryan Wilsen Huang</h1>
+            <p>Siswa SMP Bina Bhakti | Usia 14 Tahun</p>
+        </div>
+
+        <div class="main-content">
+            <div class="section">
+                <h3><span role="img" aria-label="emoji buku">📖</span> Tentang Saya</h3>
+                <p>
+                    Saya adalah seorang murid yang bersekolah di SMP Bina Bhakti dan sekarang saya sudah berusia 14 tahun.
+            </div>
+
+            <div class="section">
+                <h3><span role="img" aria-label="emoji hobi">✨</span> Hobi</h3>
+                <ul class="info-list">
+                    <li>Bermain game, terutama Mobile Legend.</li>
+                </ul>
+
+                <ul class="info-lists">
+                    <li>Menonton film aksi dan fantasi.</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h3><span role="img" aria-label="emoji tujuan">🎯</span> Tujuan</h3>
+                <p>
+                    Menyelesaikan pendidikan dengan baik dan mendapatkan nilai yang bagus.
+                </p>
+            </div>
+            
+        </div>
+        
+        <a href="new.html" class="nav-link">Kembali ke Halaman Sebelumnya </a>
+
+    </div>
+
+    <script>
+      const music = document.getElementById('bgMusic');
+      music.volume = 0.4; 
+      
+    
+      music.play().catch(() => {
+        const playMusicOnce = () => {
+          music.play();
+          document.body.removeEventListener('click', playMusicOnce);
+          document.body.removeEventListener('touchstart', playMusicOnce);
+        };
+        
+        document.body.addEventListener('click', playMusicOnce, {once: true}); 
+        document.body.addEventListener('touchstart', playMusicOnce, {once: true}); 
+      });
+    </script>
+
+    <script>
+        document.addEventListener('mousemove', (event) => {
+            const trail = document.createElement('div');
+            trail.classList.add('cursor-tail');
+            
+           
+            trail.style.left = `${event.clientX - 7.5}px`; 
+            trail.style.top = `${event.clientY - 7.5}px`;
+            
+            document.body.appendChild(trail);
+
+         
+           setTimeout(() => {
+               
+                trail.style.transform = 'scale(0)';
+                trail.style.opacity = 0;
+            });
+            
+        
+            
+            setTimeout(() => {
+                if (trail.parentElement) {
+                    trail.parentElement.removeChild(trail);
+                }
+            }, 500); 
+        });
+    </script>
+</body>
+</html>
