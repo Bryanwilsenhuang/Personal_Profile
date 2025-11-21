@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Splash Screen Example</title>
+ 
+  <style>
+    :root{
+      --bg: #0f172a; /* dark navy */
+      --accent: #06b6d4; /* teal */
+      --text: #e6eef6;
+      --muted: rgba(230,238,246,.7);
+      --duration: 800ms; /* fade duration */
+    }
+
+    html,body{height:100%;margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial}
+
+    /* page layout */
+    .app{
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: linear-gradient(180deg, #071027 0%, #0f172a 100%);
+      color:var(--text);
+      overflow:hidden;
+    }
+
+    /* splash overlay */
+    .splash{
+      position:fixed;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:var(--bg);
+      z-index:9999;
+      transition:opacity var(--duration) ease, visibility var(--duration) ease;
+      will-change:opacity,visibility;
+    }
+
+    .splash.hidden{opacity:0;visibility:hidden;pointer-events:none}
+
+    .splash-inner{
+      text-align:center;
+      max-width:900px;
+      padding:28px;
+    }
+
+    .logo{
+      width:96px;height:96px;border-radius:16px;display:inline-grid;place-items:center;margin:0 auto 18px;
+      background:linear-gradient(135deg,var(--accent),#7c3aed);
+      box-shadow: 0 6px 20px rgba(6,182,212,.14), inset 0 -6px 14px rgba(255,255,255,.04);
+      color:var(--bg);
+      font-weight:700;font-size:28px;
+    }
+
+    h1{margin:6px 0 4px;font-size:clamp(20px,4vw,28px);letter-spacing:-0.02em}
+    p.lead{margin:0 0 18px;color:var(--muted);font-size:clamp(13px,2.2vw,16px)}
+
+    .loader{
+      display:inline-flex;gap:10px;align-items:center;justify-content:center;margin-top:10px
+    }
+
+    .dot{
+      width:10px;height:10px;border-radius:50%;background:var(--accent);opacity:.95;
+      animation: bounce 900ms infinite ease-in-out;
+    }
+    .dot:nth-child(2){animation-delay:120ms}
+    .dot:nth-child(3){animation-delay:240ms}
+
+    @keyframes bounce{
+      0%,80%,100%{transform:translateY(0);opacity:.9}
+      40%{transform:translateY(-10px);opacity:1}
+    }
+
+    /* Skip button */
+    .skip{
+      position:absolute;right:18px;top:18px;background:transparent;border:1px solid rgba(255,255,255,.06);padding:8px 12px;border-radius:10px;color:var(--muted);cursor:pointer;font-size:13px;backdrop-filter: blur(6px);
+    }
+    .skip:focus{outline:2px solid var(--accent);outline-offset:2px}
+
+    /* main content: hidden while splash active */
+    .main{opacity:1;transition:opacity var(--duration) ease}
+    .main.dimmed{filter:blur(2px);}
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .dot{animation:none}
+      .splash{transition:none}
+    }
+
+    /* small screens */
+    @media (max-width:420px){
+      .logo{width:72px;height:72px;font-size:22px}
+      h1{font-size:18px}
+    }
+
+    /* noscript fallback */
+    noscript .splash{display:none}
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+
+    <!-- Splash screen overlay -->
+    <div class="splash" id="splash" role="dialog" aria-modal="true" aria-label="Loading">
+      <div class="splash-inner" id="splashInner">
+        <div class="logo" aria-hidden="true">Nanti</div>
+        <h1 id="splashTitle">Welcome to My Personal Profile</h1>
+        <p class="lead" id="splashSubtitle"></p>
+
+        <div class="loader" aria-hidden="true">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+
+        <div style="margin-top:12px;font-size:12px;color:var(--muted)">Loading…</div>
+      </div>
+
+      <button class="skip" id="skipBtn" type="button" aria-label="Skip intro">Skip</button>
+    </div>
+
+    <!-- Main page content (hidden behind splash until dismissed) -->
+    <main class="main" id="mainContent" tabindex="-1">
+      <section style="padding:48px;text-align:center;max-width:900px;margin:0 auto;">
+        <h2>Page content</h2>
+        <p>This is the main page. The splash screen will hide automatically or when the user clicks "Skip".</p>
+        <p>Build your UI here — the splash above is independent and can be reused across pages.</p>
+      </section>
+    </main>
+
+    <!-- Inline script: controls splash lifecycle -->
+    <script>
+      (function(){
+        const SPLASH_DURATION_MS = 2400;
+        const REDIRECT_URL ="new.html"
+        const splash = document.getElementById('splash');
+        const skipBtn = document.getElementById('skipBtn');
+        const main = document.getElementById('mainContent');
+        const focusAfter = main; // element to receive focus after splash
+
+        let timerId = null;
+
+        function hideSplash(reason){
+          // add hidden class to fade out
+          splash.classList.add('hidden');
+          // move aria-hidden so assistive tech knows
+          splash.setAttribute('aria-hidden','true');
+
+          console.log('splash hidden:', reason);
+
+          // restore focus to main content for keyboard users
+          focusAfter.setAttribute('tabindex','-1');
+          focusAfter.focus({preventScroll:true});
+
+        setTimeout(() => {
+                window.location.href =REDIRECT_URL;
+            }, 500)
+        }
+
+        // Auto-hide after duration (only if JS available)
+        timerId = setTimeout(()=>hideSplash('timeout'), SPLASH_DURATION_MS);
+
+        // Skip button
+        skipBtn.addEventListener('click', ()=>hideSplash('skip'));
+
+        // Allow Esc key to skip
+        document.addEventListener('keydown',(e)=>{
+          if(e.key === 'Escape' && !splash.classList.contains('hidden')){
+            hideSplash('escape');
+          }
+        });
+
+        // Defensive: if everything already loaded, hide earlier
+        window.addEventListener('load', ()=>{
+          // If load took long, keep at least minimal visual for SPLASH_DURATION_MS
+          if(timerId === null){
+            timerId = setTimeout(()=>hideSplash('load-delay'), 200);
+          }
+        });
+
+        // If the user prefers reduced motion, skip straight away (good accessibility)
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if(prefersReduced){ hideSplash('reduced-motion') }
+
+      })();
+    </script>
+
+    <noscript>
+      <!-- If JS disabled, hide the splash overlay so the page is usable -->
+      <style> .splash{display:none !important} </style>
+    </noscript>
+
+  </div>
+</body>
+</html>
